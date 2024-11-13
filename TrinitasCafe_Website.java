@@ -33,7 +33,7 @@ public class TrinitasCafe_Website extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         
-        RequestDispatcher dispatcher = request.getRequestDispatcher("index.html");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("menu.html");
         dispatcher.forward(request, response);
         
         /*response.setContentType("text/html;charset=UTF-8");
