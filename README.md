@@ -13,9 +13,19 @@ Needed Adjustments:
 -make the menu a gallery-type and add categories for a more interactive menu page (optional)
 -logout servlet
 -shorten the run time
--apply external css
+-apply external CSS (solved-11/14/24)
 
 
 -------------------------------------------------------------------------------------------------------
 
 ***Trinitas Cafe Version: 3.2***
+
+Adjustments Fixed (November 14, 2024):
+-external css applied for menu webpage, login, and signup.
+
+Needed Adjustments:
+
+-display the total price before proceeding to the payment method and display the total price in sheets and receipt
+-make the menu a gallery-type and add categories for a more interactive menu page (optional)
+-logout servlet
+-shorten the run time
