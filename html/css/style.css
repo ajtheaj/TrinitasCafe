@@ -175,3 +175,47 @@ footer {
                 width: calc(100% - 20px);
             }
         }
+		
+  .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed position */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    }
+    .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%; /* Adjust the modal width */
+        max-width: 500px;
+    }
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close-btn:hover,
+    .close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    button {
+        background-color: #FFBF9B;
+        color: #4D4D4D;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #FFF4E0;
+    }
