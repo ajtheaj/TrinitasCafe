@@ -13,6 +13,7 @@ Needed Adjustments:
 -make the menu a gallery-type and add categories for a more interactive menu page (optional)
 -logout servlet
 -shorten the run time
+-apply external css
 
 
 -------------------------------------------------------------------------------------------------------
