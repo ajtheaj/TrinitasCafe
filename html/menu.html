@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trinitas Cafe Order Form</title>
-    <link rel="icon" href="imgs/logo.png" type="image/x-icon" />
-    <link rel="stylesheet" href="style.css">	
+	<link rel="icon" href="imgs/logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <!-- Modal for displaying receipt -->
 <div id="receipt-modal" class="modal">
     <div class="modal-content">
@@ -18,10 +19,13 @@
         <p><strong>Quantity:</strong> <span id="receipt-quantity"></span></p>
         <p><strong>Queue Number:</strong> <span id="receipt-queue-number"></span></p>
         <p><strong>Transaction Number:</strong> <span id="receipt-transaction-number"></span></p>
-        <p><strong>Order Instruction:</strong> <span id="receipt-order-instruction"></span></p>
+		<p><strong>Total Price:</strong> <span id="receipt-total-price"></span></p> <!-- Add this line -->
+        <p><strong>Payment Method:</strong> <span id="receipt-selected-payment"></span></p>
+		<p><strong>Order Instruction:</strong> <span id="receipt-order-instruction"></span></p>
         <button id="close-receipt-btn">Close</button>
     </div>
 </div>
+
     <header>
         <div class="logo-title-container">
             <img src="imgs/logo.png" alt="Logo" id="logo">
@@ -34,7 +38,7 @@
 </nav>
         </div>
     </header>
-	
+
     <h2 style="font-size:2em;">Today's Menu</h2>
     <div id="menu-container"></div>
 
@@ -147,9 +151,51 @@ fetchAndDisplayStudentId();
 
     <script>
         document.getElementById('show-payment-methods').addEventListener('click', function() {
-            document.getElementById('payment-methods').style.display = 'block'; // Show payment methods
-        });
+        document.getElementById('payment-methods').style.display = 'block'; // Show payment methods
+	const orderNameSelect = document.getElementById('order-name');
+    const selectedOrder = orderNameSelect.options[orderNameSelect.selectedIndex].value;
+    const quantity = parseInt(document.getElementById('quantity').value, 10);
+                
+        if (selectedOrder && quantity > 0) {
+        // Fetch the menu data to get the price of the selected item
+        fetch(MENU_API_URL)
+        .then(response => response.json())
+        .then(menuData => {
+            const selectedItem = menuData.find(item => item.Item_Name === selectedOrder);
+            if (selectedItem) {
+                const itemPrice = parseFloat(selectedItem.Price); // Get the price of the selected item
+                const totalPrice = itemPrice * quantity; // Calculate the total price
 
+
+                // Display the total amount
+                const totalAmountElement = document.createElement('p');
+                totalAmountElement.id = 'total-price';
+                totalAmountElement.innerText = `Total Amount: ₱${totalPrice.toFixed(2)}`;
+                
+                // Append the total amount to the payment methods section if not already present
+                const paymentMethodsSection = document.getElementById('payment-methods');
+                const existingTotalAmount = document.getElementById('total-price');
+                if (existingTotalAmount) {
+                    existingTotalAmount.innerText = `Total Amount: ₱${totalPrice.toFixed(2)}`;
+                } else {
+                    paymentMethodsSection.insertBefore(totalAmountElement, paymentMethodsSection.firstChild);
+                }
+
+                // Show the payment methods section
+                paymentMethodsSection.style.display = 'block';
+            } else {
+                alert("Selected item not found.");
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching menu data:', error);
+            alert("Failed to calculate the total amount.");
+        });
+    } else {
+        alert("Please select a valid order and quantity.");
+    }
+});
+       
         // Event listener for payment method selection
         const paymentOptions = document.querySelectorAll('input[name="payment"]');
 
@@ -188,6 +234,15 @@ document.getElementById('confirm-payment').addEventListener('click', function() 
     const orderName = document.getElementById('order-name').value;
     const quantity = document.getElementById('quantity').value;
 
+    // Calculate the total price
+    fetch(MENU_API_URL)
+        .then(response => response.json())
+        .then(menuData => {
+            const selectedItem = menuData.find(item => item.Item_Name === orderName);
+            if (selectedItem && quantity > 0) {
+                const itemPrice = parseFloat(selectedItem.Price);
+                const totalPrice = itemPrice * quantity;
+				
       // Check if the quantity is greater than 3
     if (parseInt(quantity) > 3) {
         alert("You can only order up to 3 items.");
@@ -201,20 +256,28 @@ document.getElementById('confirm-payment').addEventListener('click', function() 
             if (data.length >= 5) {
                 alert("The baristas are still preparing 5 orders. Please try to order again later.");
             } else {
-                placeOrder(studentId, currentDate, orderName, quantity, selectedPayment);
+                placeOrder(studentId, currentDate, orderName, quantity, totalPrice, selectedPayment);
             }
         })
         .catch(error => {
             console.error("Error checking student orders:", error);
         });
+} else {
+                alert("Please select a valid order and quantity.");
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching menu data:', error);
+            alert("Failed to calculate the total amount.");
+        });
 });
 
 
-function placeOrder(studentId, currentDate, orderName, quantity, selectedPayment) {
+    function placeOrder(studentId, currentDate, orderName, quantity, totalPrice, selectedPayment) {
     // Generate a unique 4-digit queue number
     const queueNumber = Math.floor(1000 + Math.random() * 9000);
 
-     const now = new Date();
+    const now = new Date();
     const timeOrdered = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const transactionNumber = selectedPayment === 'Cash' ? 'N/A' : document.getElementById('transaction-number').value.trim();
     const orderInstruction = "Please keep your transaction number for tracking. You can claim your order after 5 minutes (10 minutes maximum)";
@@ -225,6 +288,7 @@ function placeOrder(studentId, currentDate, orderName, quantity, selectedPayment
                 "Student ID": studentId,
                 "Order Name": orderName,
                 "Quantity": parseInt(quantity, 10),
+				"Total Amount": `₱${totalPrice.toFixed(2)}`, // Add total price to the order data
                 "Status": "Preparing",
                 "Queue Number": queueNumber,
                 "Payment Method": selectedPayment,
@@ -251,6 +315,8 @@ function placeOrder(studentId, currentDate, orderName, quantity, selectedPayment
             document.getElementById('receipt-quantity').innerText = quantity;
             document.getElementById('receipt-queue-number').innerText = queueNumber;
             document.getElementById('receipt-transaction-number').innerText = transactionNumber;
+		    document.getElementById('receipt-total-price').innerText = `₱${totalPrice.toFixed(2)}`;
+			document.getElementById('receipt-selected-payment').innerText = selectedPayment;
             document.getElementById('receipt-order-instruction').innerText = orderInstruction;
 
             // Show the modal
