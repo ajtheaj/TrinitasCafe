@@ -459,8 +459,11 @@ button {
 }
 
 .bulit_icon {
-    width: 100%;
+    width: 20%;
     text-align: center;
+	display: block;
+margin-left: auto;
+margin-right: auto;
 }
 
 .coffee_img img {
