@@ -11,7 +11,6 @@ __Adjustments Fixed (November 11, 2024):__  <br />
 __Needed Adjustments:__ <br />
 
 -display the total price before proceeding to the payment method and display the total price in sheets and receipt (solved-11/14/24) <br />
--make the menu a gallery-type and add categories for a more interactive menu page (optional) <br />
 -logout servlet <br />
 -shorten the run time <br />
 -apply external CSS (solved-11/14/24) <br />
@@ -27,6 +26,5 @@ __Adjustments Fixed (November 14, 2024):__ <br />
 
 __Needed Adjustments:__ <br />
 
--make the menu a gallery-type and add categories for a more interactive menu page (optional) <br />
 -logout servlet <br />
 -shorten the run time <br />
