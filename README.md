@@ -29,6 +29,8 @@ __Needed Adjustments:__ <br />
 -logout servlet <br />
 -shorten the run time <br />
 
+--------------------------------------------------------------------------------------------------------
+
 ***Trinitas Cafe Version: 4.0***
 
 __Adjustments Fixed (November 20, 2024):__ <br />
