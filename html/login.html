@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+	<link rel="icon" href="imgs/logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="form-container" id="login-form">
+        <h2>Login</h2>
+        <form id="login-form-inner" action="LoginServlet" method="POST" onsubmit="return validateStudentId()">
+            <label for="login-student-id">Student ID</label>
+            <input type="text" id="login-student-id" placeholder="Enter Student ID" required>
+
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter Password" required>
+
+            <button type="button" id="login-btn">Login</button>
+        </form>
+        
+        <p>
+            Don't have an account? 
+            <a href="signup.html">Sign up here</a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('login-btn').addEventListener('click', function () {
+                const studentId = document.getElementById('login-student-id').value;
+                const password = document.getElementById('login-password').value;
+
+                fetch(`https://sheetdb.io/api/v1/mvx16mkj2oczv/search?Student%20ID=${studentId}&Password=${password}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            alert('Login successful! Redirecting to order form...');
+                            window.location.href = 'menu.html'; // Replace with your order form URL
+                        } else {
+                            alert('Invalid Student ID or Password.');
+                        }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                const error = urlParams.get('error');
+
+                if (error === 'invalid_id') {
+                    alert('Invalid Student ID');
+                } else if (error === 'invalid_credentials') {
+                    alert('Invalid Student ID or Password.');
+                }
+                else if (error === 'missing_credentials') {
+                    alert('Enter required input');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinitas Cafe Order Form</title>
+	<link rel="icon" href="imgs/logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Modal for displaying receipt -->
+<div id="receipt-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="close-modal">&times;</span>
+        <h2>Order Receipt</h2>
+        <p><strong>Student ID:</strong> <span id="receipt-student-id"></span></p>
+        <p><strong>Order Name:</strong> <span id="receipt-order-name"></span></p>
+        <p><strong>Quantity:</strong> <span id="receipt-quantity"></span></p>
+        <p><strong>Queue Number:</strong> <span id="receipt-queue-number"></span></p>
+        <p><strong>Transaction Number:</strong> <span id="receipt-transaction-number"></span></p>
+		<p><strong>Total Price:</strong> <span id="receipt-total-price"></span></p> <!-- Add this line -->
+        <p><strong>Payment Method:</strong> <span id="receipt-selected-payment"></span></p>
+		<p><strong>Order Instruction:</strong> <span id="receipt-order-instruction"></span></p>
+        <button id="close-receipt-btn">Close</button>
+    </div>
+</div>
+
+    <header>
+        <div class="logo-title-container">
+            <img src="imgs/logo.png" alt="Logo" id="logo">
+            <h1>Trinitas Cafe</h1>
+        </div>
+        
+        <div id="nav-log" class="nav">
+            <nav>
+    <span id="student-id-display">Login</span>
+</nav>
+        </div>
+    </header>
+
+    <h2 style="font-size:2em;">Today's Menu</h2>
+    <div id="menu-container"></div>
+
+    <script>
+	
+        // URLs for the API endpoints for the two sheets
+        const MENU_API_URL = 'https://sheetdb.io/api/v1/yepxfqg6haibq';  
+        const ORDERS_API_URL = 'https://sheetdb.io/api/v1/cn00huot4vd71'; 
+        const LOGIN_API_URL = 'https://sheetdb.io/api/v1/mvx16mkj2oczv'; // Replace with your actual API
+
+// Function to fetch and display the Student ID after login
+    function fetchAndDisplayStudentId() {
+    fetch(LOGIN_API_URL)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+               // Assuming the last entry represents the logged-in student
+                const recentEntry = data[data.length - 1];
+                const studentId = recentEntry['Student ID']; // Adjust if necessary
+
+                // Check if the studentId exists and update the navbar
+                if (studentId) {
+                    document.getElementById('student-id-display').innerText = `Welcome, ${studentId}`;
+                } else {
+                    console.error('Student ID not found in response.');
+                }
+            } else {
+                console.error('No student data found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching student data:', error);
+        });
+}
+
+// Call this function after a successful login
+fetchAndDisplayStudentId();
+
+        // Fetch the menu items from the "menu" sheet via SheetDB
+        fetch(MENU_API_URL)
+    .then(response => response.json())
+    .then(data => {
+        const menuContainer = document.getElementById('menu-container');
+        const orderNameSelect = document.getElementById('order-name'); // Dropdown element for order names
+        menuContainer.innerHTML = '';  // Clear the container first
+        orderNameSelect.innerHTML = '<option value="" disabled selected>Select your order</option>'; // Reset dropdown options
+
+        if (data.length === 0) {
+            menuContainer.innerHTML = '<p>Sorry, we\'re not available today.</p>';  // Handle empty data
+        } else {
+            data.forEach(record => {
+                // Check if the item is available
+                if (record.Availability.toLowerCase() === 'available') {
+                    // Create the menu item card
+                    const item = document.createElement('div');
+                    item.className = 'menu-item';
+                    item.innerHTML = `
+                        <h3>${record.Item_Name}</h3>
+                        <p>Price: ₱${record.Price}</p>
+                        <p>Availability: ${record.Availability}</p>
+                        <img src="${record.Image_URL}" alt="${record.Item_Name}" style="width: 100px; height: auto;" />
+                    `;
+                    menuContainer.appendChild(item);
+
+                    // Add the menu item as an option in the dropdown
+                    const option = document.createElement('option');
+                    option.value = record.Item_Name;
+                    option.text = record.Item_Name;
+                    orderNameSelect.appendChild(option);
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching menu data:', error);
+        document.getElementById('menu-container').innerHTML = '<p>Error loading menu.</p>';
+    });
+        
+				
+    </script>
+
+    <h2 style="font-size:2em;">Place Your Order</h2>
+    <form id="order-form">
+        <!-- Dropdown for order names -->
+        <select id="order-name" required>
+            <option value="" disabled selected>Select your order</option>
+            <!-- Options will be dynamically populated from the menu -->
+        </select>
+
+        <input type="number" id="quantity" placeholder="Quantity" required max="3">
+
+        <button type="button" id="show-payment-methods">Proceed to Payment Method</button>
+         
+        <div id="payment-methods">
+            <h3>Payment Method</h3>
+            <label><input type="radio" name="payment" value="GCash"> GCash</label><br>
+            <label><input type="radio" name="payment" value="Bank-Transfer"> Bank Transfer</label><br>
+			 <label><input type="radio" name="payment" value="Cash">Cash</label><br>
+            <img id="qr-code" src="imgs/qr.jpg" alt="QR Code" /> <!-- Replace with actual QR code URL -->
+            <button type="button" id="confirm-payment" style="display: none;">I have completed the payment</button>
+            <input type="text" id="transaction-number" placeholder="Transaction Number" style="display: none;" required maxlength="13">
+        </div>
+
+        <button type="submit" id="submit-order" style="display: none;">Place Order</button>
+    </form>
+
+    <div id="queue-number"></div>
+    <div id="payment-instruction" style="display: none; margin-top: 20px;"></div>
+    <button id="place-order-again" style="display: none;">Place an Order Again</button>
+
+    <script>
+        document.getElementById('show-payment-methods').addEventListener('click', function() {
+        document.getElementById('payment-methods').style.display = 'block'; // Show payment methods
+	const orderNameSelect = document.getElementById('order-name');
+    const selectedOrder = orderNameSelect.options[orderNameSelect.selectedIndex].value;
+    const quantity = parseInt(document.getElementById('quantity').value, 10);
+                
+        if (selectedOrder && quantity > 0) {
+        // Fetch the menu data to get the price of the selected item
+        fetch(MENU_API_URL)
+        .then(response => response.json())
+        .then(menuData => {
+            const selectedItem = menuData.find(item => item.Item_Name === selectedOrder);
+            if (selectedItem) {
+                const itemPrice = parseFloat(selectedItem.Price); // Get the price of the selected item
+                const totalPrice = itemPrice * quantity; // Calculate the total price
+
+
+                // Display the total amount
+                const totalAmountElement = document.createElement('p');
+                totalAmountElement.id = 'total-price';
+                totalAmountElement.innerText = `Total Amount: ₱${totalPrice.toFixed(2)}`;
+                
+                // Append the total amount to the payment methods section if not already present
+                const paymentMethodsSection = document.getElementById('payment-methods');
+                const existingTotalAmount = document.getElementById('total-price');
+                if (existingTotalAmount) {
+                    existingTotalAmount.innerText = `Total Amount: ₱${totalPrice.toFixed(2)}`;
+                } else {
+                    paymentMethodsSection.insertBefore(totalAmountElement, paymentMethodsSection.firstChild);
+                }
+
+                // Show the payment methods section
+                paymentMethodsSection.style.display = 'block';
+            } else {
+                alert("Selected item not found.");
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching menu data:', error);
+            alert("Failed to calculate the total amount.");
+        });
+    } else {
+        alert("Please select a valid order and quantity.");
+    }
+});
+       
+        // Event listener for payment method selection
+        const paymentOptions = document.querySelectorAll('input[name="payment"]');
+
+    document.querySelectorAll('input[name="payment"]').forEach(option => {
+    option.addEventListener('change', function() {
+        // Show the QR code for GCash or Bank Transfer
+        if (this.value === 'GCash' || this.value === 'Bank-Transfer') {
+            document.getElementById('qr-code').style.display = 'block'; // Show the QR code
+            document.getElementById('confirm-payment').style.display = 'inline'; // Show confirm payment button
+            document.getElementById('transaction-number').style.display = 'inline'; // Show transaction number input
+            document.getElementById('submit-order').style.display = 'none'; // Hide submit order button until payment is confirmed
+        } else if (this.value === 'Cash') {
+            document.getElementById('qr-code').style.display = 'none'; // Hide the QR code for Cash
+            document.getElementById('confirm-payment').style.display = 'none'; // Hide confirm payment button for Cash
+            document.getElementById('transaction-number').style.display = 'none'; // Hide transaction number input for Cash
+            document.getElementById('submit-order').style.display = 'block'; // Show submit order button directly for Cash
+        }
+    });
+});
+// Event listener for confirm payment button (for GCash/Bank Transfer)
+document.getElementById('confirm-payment').addEventListener('click', function() {
+    const transactionNumber = document.getElementById('transaction-number').value.trim();
+    if (transactionNumber.length === 13) {  // Check if transaction number is valid
+        document.getElementById('submit-order').style.display = 'block'; // Show submit order button
+    } else {
+        alert("Please enter a valid transaction number.");
+    }
+});
+    document.getElementById('submit-order').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
+    const studentId = document.querySelector('nav span').innerText.replace('Welcome, ', ''); // Get the logged-in Student ID from the navbar
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    const orderName = document.getElementById('order-name').value;
+    const quantity = document.getElementById('quantity').value;
+
+    // Calculate the total price
+    fetch(MENU_API_URL)
+        .then(response => response.json())
+        .then(menuData => {
+            const selectedItem = menuData.find(item => item.Item_Name === orderName);
+            if (selectedItem && quantity > 0) {
+                const itemPrice = parseFloat(selectedItem.Price);
+                const totalPrice = itemPrice * quantity;
+				
+      // Check if the quantity is greater than 3
+    if (parseInt(quantity) > 3) {
+        alert("You can only order up to 3 items.");
+        return; // Stop the form submission if the quantity is too high
+    }
+	
+    // Check the number of orders the student has already placed today
+    fetch(`${ORDERS_API_URL}?Student%20ID=${studentId}&Date%20Ordered=${currentDate}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length >= 5) {
+                alert("The baristas are still preparing 5 orders. Please try to order again later.");
+            } else {
+                placeOrder(studentId, currentDate, orderName, quantity, totalPrice, selectedPayment);
+            }
+        })
+        .catch(error => {
+            console.error("Error checking student orders:", error);
+        });
+} else {
+                alert("Please select a valid order and quantity.");
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching menu data:', error);
+            alert("Failed to calculate the total amount.");
+        });
+});
+
+
+    function placeOrder(studentId, currentDate, orderName, quantity, totalPrice, selectedPayment) {
+    // Generate a unique 4-digit queue number
+    const queueNumber = Math.floor(1000 + Math.random() * 9000);
+
+    const now = new Date();
+    const timeOrdered = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    const transactionNumber = selectedPayment === 'Cash' ? 'N/A' : document.getElementById('transaction-number').value.trim();
+    const orderInstruction = "Please keep your transaction number for tracking. You can claim your order after 5 minutes (10 minutes maximum)";
+        
+		const orderData = {
+		data: [
+            {
+                "Student ID": studentId,
+                "Order Name": orderName,
+                "Quantity": parseInt(quantity, 10),
+				"Total Amount": `₱${totalPrice.toFixed(2)}`, // Add total price to the order data
+                "Status": "Preparing",
+                "Queue Number": queueNumber,
+                "Payment Method": selectedPayment,
+                "Transaction Number": selectedPayment === 'Cash' ? 'N/A' : document.getElementById('transaction-number').value.trim(),
+                "Date Ordered": currentDate,
+                "Time Ordered": timeOrdered,
+                "Payment Status": "Pending"
+            }
+        ]
+    };
+
+    // Send the order to the "orders" sheet via SheetDB
+    fetch(ORDERS_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        if (response.ok) {
+           document.getElementById('receipt-student-id').innerText = studentId;
+            document.getElementById('receipt-order-name').innerText = orderName;
+            document.getElementById('receipt-quantity').innerText = quantity;
+            document.getElementById('receipt-queue-number').innerText = queueNumber;
+            document.getElementById('receipt-transaction-number').innerText = transactionNumber;
+		    document.getElementById('receipt-total-price').innerText = `₱${totalPrice.toFixed(2)}`;
+			document.getElementById('receipt-selected-payment').innerText = selectedPayment;
+            document.getElementById('receipt-order-instruction').innerText = orderInstruction;
+
+            // Show the modal
+            document.getElementById('receipt-modal').style.display = 'block';
+
+            // Reset the form
+            document.getElementById('order-form').reset(); 
+            document.getElementById('payment-methods').style.display = 'none'; // Hide payment methods
+            document.getElementById('submit-order').style.display = 'none'; // Hide submit order button
+        } else {
+            alert("Error placing order. Please try again.");
+        }
+    })
+    .catch(error => {
+        console.error("Error placing order:", error);
+    });
+}
+// Close the modal when the user clicks the "Close" button
+document.getElementById('close-receipt-btn').addEventListener('click', function() {
+    document.getElementById('receipt-modal').style.display = 'none';
+});
+
+// Close the modal when the user clicks the close icon (×)
+document.getElementById('close-modal').addEventListener('click', function() {
+    document.getElementById('receipt-modal').style.display = 'none';
+});
+document.getElementById('place-order-again').addEventListener('click', function() {
+    // Reset the order form
+    document.getElementById('order-form').reset();
+
+    // Hide payment methods and reset other UI elements
+    document.getElementById('payment-methods').style.display = 'none';
+    document.getElementById('submit-order').style.display = 'none';
+    document.getElementById('queue-number').style.display = 'none';
+    document.getElementById('payment-instruction').style.display = 'none';
+    document.getElementById('place-order-again').style.display = 'none';
+    
+    // Show the initial form and button to proceed to payment methods
+    document.getElementById('show-payment-methods').style.display = 'block';
+});
+
+
+    </script>
+	<footer>
+    <img src="imgs/footer.png" alt="Footer Image" id="footer-image">
+</footer>
+
+</body>
+</html>
