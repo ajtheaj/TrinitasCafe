@@ -61,7 +61,7 @@ public class SignupServlet extends HttpServlet {
         // Check if data was successfully added
         int responseCode = conn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_CREATED) { // HTTP 201 Created
-            response.sendRedirect("index.html");
+            response.sendRedirect("login.html");
         } else {
             response.sendRedirect("signup.html?error=signup_failed");
         }

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="icon" href="imgs/logo.png" type="image/x-icon" />
-    <link rel="stylesheet" href="signup.css">
+	<link rel="icon" href="imgs/logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href="signup.css">
 </head>
 <body>
     <div class="form-container" id="sign-up-form">
@@ -28,7 +28,7 @@
 
         <p>
             Already have an account? 
-            <a href="index.html">Login here</a>
+            <a href="login.html">Login here</a>
         </p>
     </div>
 
@@ -89,7 +89,7 @@
                   .then(data => {
                     if (data.created > 0) {
                         alert('Sign-up successful! Proceeding to login...');
-                        window.location.href = 'index.html'; // Redirect to login page
+                        window.location.href = 'login.html'; // Redirect to login page
                     } else {
                         alert('Sign-up failed. Please try again.');
                     }

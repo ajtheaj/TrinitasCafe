@@ -25,21 +25,25 @@
         <button id="close-receipt-btn">Close</button>
     </div>
 </div>
-
+  
     <header>
-        <div class="logo-title-container">
-            <img src="imgs/logo.png" alt="Logo" id="logo">
-            <h1>Trinitas Cafe</h1>
-        </div>
-        
-        <div id="nav-log" class="nav">
-            <nav>
-    <span id="student-id-display">Login</span>
-</nav>
-        </div>
+      <div class="logo-title-container">
+        <img src="images/nescafe.png" alt="Logo" id="logo">
+        <h1>Nescafe Coffee</h1>
+      </div>
+      
+      <div id="nav-log" class="nav">
+        <nav>
+          <span id="student-id-display" class="welcome-message">Welcome, <strong>Student</strong></span>
+          <a href="index.html" id="logout-link" class="logout-link"> 
+            <img src="images/logout.png" alt="Logout" class="logout-icon"> Logout
+          </a>
+        </nav>
+      </div>
     </header>
-
-    <h2 style="font-size:2em;">Today's Menu</h2>
+    <h2 style="font-size:2em;">Nescafe's Menu</h2>
+	  <div class="logo-container">
+    <img src="images/nescafe.png" alt="Logo" class="logo"></div>
     <div id="menu-container"></div>
 
     <script>
@@ -165,7 +169,6 @@ fetchAndDisplayStudentId();
             if (selectedItem) {
                 const itemPrice = parseFloat(selectedItem.Price); // Get the price of the selected item
                 const totalPrice = itemPrice * quantity; // Calculate the total price
-
 
                 // Display the total amount
                 const totalAmountElement = document.createElement('p');

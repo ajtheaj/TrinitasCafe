@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
         
         if (!studentId.matches("\\d{10}")) {
             // Redirect back to login page with an error message
-            response.sendRedirect("index.html?error=invalid_id");
+            response.sendRedirect("login.html?error=invalid_id");
             return;
         }
         
@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("menu.html");
                 } else {
                     // Invalid password
-                    response.sendRedirect("index.html?error=invalid_credentials");
+                    response.sendRedirect("login.html?error=invalid_credentials");
                 }
             } else {
                 // Student ID not found
@@ -70,7 +70,7 @@ public class LoginServlet extends HttpServlet {
             }
         } else {
             // Error handling if SheetDB API call fails
-            response.sendRedirect("index.html?error=server_error");
+            response.sendRedirect("login.html?error=server_error");
         }
     }
 }
