@@ -39,7 +39,7 @@
     }
     
     h1 {
-        color: #B46060;
+        color: white;
         margin: 0;
         font-size: 2em; /* Adjust font size as needed */
     }
@@ -223,3 +223,52 @@ footer {
     button:hover {
         background-color: #FFF4E0;
     }
+	
+	
+/* Container for centering */
+  .logo-container {
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center;    /* Center vertically */
+      height: 10vh;          /* Full viewport height for vertical centering */
+  }
+
+  /* Logo styling */
+  .logo {
+      height: 100px; /* Adjust to your desired size */
+      width: auto;   /* Maintain aspect ratio */
+  }
+  /* Set background image for the header */
+header {
+    background-image: url('images/header-bg.png');
+    background-size: cover;
+    background-position: center;
+    padding: 10px;
+}
+
+/* Style for the welcome message */
+.welcome-message {
+    font-family: 'Arial', sans-serif;  /* Change the font to your desired one */
+    color: #080808;  /* Change the text color */
+    font-size: 18px;
+}
+
+/* Style for the logout link */
+.logout-link {
+    font-family: 'Arial', sans-serif;  /* Change the font to your desired one */
+    color:#080808;  /* Change the link color */
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+.logout-icon {
+    width: 20px;  /* Adjust icon size */
+    height: 20px;
+    margin-right: 5px;
+	
+}
+
+.logout-link:hover {
+    color: #f1c40f;  /* Change hover color */
+}
