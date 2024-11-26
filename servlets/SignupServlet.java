@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 @WebServlet(name = "SignupServlet", urlPatterns = {"/SignupServlet"})
 public class SignupServlet extends HttpServlet {
-    private static final String SHEETDB_API_URL = "https://sheetdb.io/api/v1/mvx16mkj2oczv";
+    private static final String SHEETDB_API_URL = "https://sheetdb.io/api/v1/a3v9fypr110rc";
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -70,7 +70,7 @@ public class SignupServlet extends HttpServlet {
 
         int responseCode = conn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_CREATED) {
-            response.sendRedirect("/index.html");
+            response.sendRedirect("/login.html");
         } else {
             response.sendRedirect("/signup.html?error=signup_failed");
         }
