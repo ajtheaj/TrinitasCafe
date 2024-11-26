@@ -11,8 +11,8 @@ __Adjustments Fixed (November 11, 2024):__  <br />
 __Needed Adjustments:__ <br />
 
 -display the total price before proceeding to the payment method and display the total price in sheets and receipt (solved-11/14/24) <br />
--logout servlet <br />
--shorten the run time <br />
+-logout servlet (solved 11-26) <br />
+-shorten the run time (solved 11-26) <br />
 -apply external CSS (solved-11/14/24) <br />
 
 
@@ -26,8 +26,8 @@ __Adjustments Fixed (November 14, 2024):__ <br />
 
 __Needed Adjustments:__ <br />
 
--logout servlet <br />
--shorten the run time <br />
+-logout servlet (solved 11-26) <br />
+-shorten the run time (solved 11-26) <br />
 
 --------------------------------------------------------------------------------------------------------
 
@@ -38,4 +38,17 @@ __Adjustments Fixed (November 20, 2024):__ <br />
 
 __Needed Adjustments:__ <br />
 
--enhance faqs page
+-enhance faqs page (solved 11-26)
+
+--------------------------------------------------------------------------------------------------------
+
+***Trinitas Cafe Version: 4.1***
+
+__Adjustments Fixed (November 26, 2024):__ <br />
+-updated API keys <br />
+-LogoutServlet, CheckSessionServlet <br />
+
+__Needed Adjustments:__ <br />
+-server-side enhancements
+
+
