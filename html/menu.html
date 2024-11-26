@@ -14,10 +14,10 @@
     <div class="modal-content">
         <span class="close-btn" id="close-modal">&times;</span>
         <h2>Order Receipt</h2>
+		<center><h2><strong>Queue Number:</strong> <b><span id="receipt-queue-number"></span></b></h2></center>
         <p><strong>Student ID:</strong> <span id="receipt-student-id"></span></p>
         <p><strong>Order Name:</strong> <span id="receipt-order-name"></span></p>
         <p><strong>Quantity:</strong> <span id="receipt-quantity"></span></p>
-        <p><strong>Queue Number:</strong> <span id="receipt-queue-number"></span></p>
         <p><strong>Transaction Number:</strong> <span id="receipt-transaction-number"></span></p>
 		<p><strong>Total Price:</strong> <span id="receipt-total-price"></span></p> <!-- Add this line -->
         <p><strong>Payment Method:</strong> <span id="receipt-selected-payment"></span></p>
@@ -25,33 +25,34 @@
         <button id="close-receipt-btn">Close</button>
     </div>
 </div>
-  
-    <header>
-      <div class="logo-title-container">
+
+   <header>
+    <div class="logo-title-container">
         <img src="images/nescafe.png" alt="Logo" id="logo">
-        <h1>Nescafe Coffee</h1>
-      </div>
-      
-      <div id="nav-log" class="nav">
+        <h1>Trinitas Cafe</h1>
+    </div>
+    
+    <div id="nav-log" class="nav">
         <nav>
-          <span id="student-id-display" class="welcome-message">Welcome, <strong>Student</strong></span>
-          <a href="index.html" id="logout-link" class="logout-link"> 
-            <img src="images/logout.png" alt="Logout" class="logout-icon"> Logout
-          </a>
+            <span id="student-id-display" class="welcome-message">Welcome, <strong><em>Student</em></strong></span>
+            <a href="index.html" id="logout-link" class="logout-link">
+                <img src="images/logout.png" alt="Logout" class="logout-icon"> Logout
+            </a>
         </nav>
-      </div>
-    </header>
-    <h2 style="font-size:2em;">Nescafe's Menu</h2>
-	  <div class="logo-container">
+    </div>
+</header>
+
+     <h2 style="font-size:2em;">Nescafe's Menu</h2>
+	<div class="logo-container">
     <img src="images/nescafe.png" alt="Logo" class="logo"></div>
     <div id="menu-container"></div>
 
     <script>
 	
         // URLs for the API endpoints for the two sheets
-        const MENU_API_URL = 'https://sheetdb.io/api/v1/yepxfqg6haibq';  
-        const ORDERS_API_URL = 'https://sheetdb.io/api/v1/cn00huot4vd71'; 
-        const LOGIN_API_URL = 'https://sheetdb.io/api/v1/mvx16mkj2oczv'; // Replace with your actual API
+        const MENU_API_URL = 'https://sheetdb.io/api/v1/rt2kingf50buw';  
+        const ORDERS_API_URL = 'https://sheetdb.io/api/v1/7m5t2uk3a8y0m'; 
+        const LOGIN_API_URL = 'https://sheetdb.io/api/v1/a3v9fypr110rc'; // Replace with your actual API
 
 // Function to fetch and display the Student ID after login
     function fetchAndDisplayStudentId() {
@@ -169,6 +170,7 @@ fetchAndDisplayStudentId();
             if (selectedItem) {
                 const itemPrice = parseFloat(selectedItem.Price); // Get the price of the selected item
                 const totalPrice = itemPrice * quantity; // Calculate the total price
+
 
                 // Display the total amount
                 const totalAmountElement = document.createElement('p');
