@@ -12,7 +12,7 @@
         <h2>Sign Up</h2>
         <form id="sign-up-form-inner" action="SignupServlet" method="POST">
             <label for="student-id">Student ID</label>
-            <input type="text" id="student-id" placeholder="Enter Student ID" required>
+            <input type="text" id="student-id" placeholder="Enter Student ID" required max="10">
 
             <label for="name">Name</label>
             <input type="text" id="name" placeholder="Enter Name" required>
@@ -79,7 +79,7 @@
                 }  
                 
                 // Send sign-up data to SheetsDB
-                fetch('https://sheetdb.io/api/v1/mvx16mkj2oczv', {
+                fetch('https://sheetdb.io/api/v1/a3v9fypr110rc', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
