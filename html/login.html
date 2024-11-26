@@ -12,7 +12,7 @@
         <h2>Login</h2>
         <form id="login-form-inner" action="LoginServlet" method="POST" onsubmit="return validateStudentId()">
             <label for="login-student-id">Student ID</label>
-            <input type="text" id="login-student-id" placeholder="Enter Student ID" required>
+            <input type="text" id="login-student-id" placeholder="Enter Student ID" required max="10">
 
             <label for="login-password">Password</label>
             <input type="password" id="login-password" placeholder="Enter Password" required>
@@ -32,7 +32,8 @@
                 const studentId = document.getElementById('login-student-id').value;
                 const password = document.getElementById('login-password').value;
 
-                fetch(`https://sheetdb.io/api/v1/mvx16mkj2oczv/search?Student%20ID=${studentId}&Password=${password}`)
+                fetch(`https://sheetdb.io/api/v1/a3v9fypr110rc/search?Student%20ID=${studentId}&Password=${password}`)
+
                     .then(response => response.json())
                     .then(data => {
                         if (data.length > 0) {
