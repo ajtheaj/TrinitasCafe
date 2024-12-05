@@ -2,46 +2,46 @@
     body {
         font-family: Arial, sans-serif;
         margin: 10px;
-        background-image: url('imgs/bg.png'); /* Set the background image */
-        background-size: cover; /* Cover the entire viewport */
-        background-position: center; /* Center the image */
-        background-repeat: no-repeat; /* Do not repeat the image */
-        background-color: rgba(245, 245, 245, 0.5); /* Optional: semi-transparent fallback */
+        background-image: url('imgs/bg.png'); 
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat; 
+        background-color: rgba(245, 245, 245, 0.5); 
     }
     
     header {
-        display: flex; /* Use flexbox for alignment */
-        align-items: center; /* Center items vertically */
+        display: flex; 
+        align-items: center; 
         justify-content: space-between;
-        margin-bottom: 30px; /* Space below the header */
-        position: relative; /* Relative positioning for layering */
-        z-index: 1; /* Ensure header is above the background */
+        margin-bottom: 30px; 
+        position: relative; 
+        z-index: 1; 
         width: 100%;
     }
     
     /* Container to align logo and title next to each other */
     .logo-title-container {
         display: flex;
-        align-items: center; /* Aligns logo and title vertically */
+        align-items: center; 
     }
     
     #logo {
-        width: 100px; /* Set the desired width for the logo */
-        height: auto; /* Maintain aspect ratio */
-        margin-right: 20px; /* Space between logo and title */
+        width: 100px; 
+        height: auto;
+        margin-right: 20px; 
     }
  
-    h2, .menu-title, /* Specific class for today's menu */
-    .order-title { /* Specific class for place your order */
-        color: #B46060; /* Set text color */
+    h2, .menu-title, 
+    .order-title { 
+        color: #B46060; 
         text-align: center;
-        margin: 0; /* Remove default margin for better alignment */
+        margin: 0; 
     }
     
     h1 {
         color: white;
         margin: 0;
-        font-size: 2em; /* Adjust font size as needed */
+        font-size: 2em; 
     }
     
     .nav {
@@ -59,36 +59,39 @@
 	padding: 8px 30px;
 	font-weight: bold;
     }
+	
+
+
     .menu-title {
-        font-size: 1.5em; /* Adjust font size for today's menu */
-        margin-bottom: 20px; /* Space below */
+        font-size: 1.5em; 
+        margin-bottom: 20px; 
     }
     .order-title {
-        font-size: 1.5em; /* Adjust font size for place your order */
-        margin-top: 20px; /* Space above */
+        font-size: 1.5em; 
+        margin-top: 20px; 
     }
     #menu-container {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
-        gap: 20px; /* Space between menu items */
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 20px; 
         margin-bottom: 20px;
     }
     .menu-item {
         border: 1px solid #ccc;
-        padding: 15px; /* More padding for better spacing */
-        border-radius: 8px; /* Rounded corners for menu items */
-        background-color: #fff; /* White background for menu items */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-        transition: transform 0.2s; /* Smooth transition for hover effect */
-        text-align: center; /* Center text in menu items */
+        padding: 15px; 
+        border-radius: 8px; 
+        background-color: #fff; 
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        transition: transform 0.2s; 
+        text-align: center;
     }
     .menu-item:hover {
-        transform: scale(1.05); /* Slightly enlarge on hover */
+        transform: scale(1.05); 
     }
     img {
-        width: 100%; /* Responsive images */
+        width: 100%; 
         height: auto;
-        border-radius: 8px; /* Rounded corners for images */
+        border-radius: 8px; 
     }
     #order-form {
         margin: 0 auto;
@@ -97,73 +100,73 @@
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: relative; /* Relative positioning for layering */
-        z-index: 1; /* Ensure form is above the background */
+        position: relative; 
+        z-index: 1; 
     }
     input[type="text"],
     input[type="number"],
     select {
-        width: 90%; /* Shortened width for input fields */
+        width: 90%; 
         padding: 10px;
         margin: 5px 0 15px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        font-size: 16px; /* Larger font size for inputs */
-        display: block; /* Ensure inputs take full available width */
-        margin-left: auto; /* Center input fields */
-        margin-right: auto; /* Center input fields */
+        font-size: 16px; 
+        display: block; 
+        margin-left: auto; 
+        margin-right: auto; 
     }
     button {
-        background-color: #FFBF9B; /* Button background color */
-        color: #4D4D4D; /* Button text color */
+        background-color: #FFBF9B; 
+        color: #4D4D4D;
         padding: 10px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         width: 100%;
-        font-size: 16px; /* Consistent font size for buttons */
-        transition: background-color 0.3s; /* Smooth transition for button hover effect */
+        font-size: 16px; 
+        transition: background-color 0.3s; 
     }
     button:hover {
-        background-color: #FFF4E0; /* Button background color on hover */
+        background-color: #FFF4E0; 
     }
     #payment-methods,
     #queue-number,
     #payment-instruction {
-        display: none; /* Hidden until relevant action occurs */
+        display: none; 
         margin-top: 20px;
-        background-color: #f9f9f9; /* Light background for payment info */
-        padding: 10px; /* Padding for payment info */
-        border-radius: 4px; /* Rounded corners */
-        border: 1px solid #ccc; /* Border around payment info */
+        background-color: #f9f9f9; 
+        padding: 10px; 
+        border-radius: 4px; 
+        border: 1px solid #ccc; 
     }
     #qr-code {
-        display: none; /* Hidden until payment method is chosen */
+        display: none; 
         margin-top: 20px;
-        width: 100px; /* Adjust as needed */
+        width: 100px; 
     }
     #place-order-again {
-        display: none; /* Hidden until order is submitted */
+        display: none;
         margin-top: 20px;
-        background-color:  #FFBF9B; /* Blue background for "Place Order Again" button */
+        background-color:  #FFBF9B; 
     }
     #place-order-again:hover {
-        background-color: #FFF4E0; /* Darker blue on hover */
+        background-color: #FFF4E0; 
     }
 footer {
-    text-align: center; /* Center the content in the footer */
-    margin-top: 20px; /* Space above the footer */
-    position: relative; /* Ensure it stacks properly */
-    z-index: 1; /* Ensure footer is above the background */
-    padding: 10px 0; /* Add padding for spacing */
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: add a background color for contrast */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
+    text-align: center; 
+    margin-top: 20px; 
+    position: relative; 
+    z-index: 1; 
+    padding: 10px 0; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 #footer-image {
-    width: 100%; /* Make the footer image responsive */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 60px; /* Set a maximum height for the image */
+    width: 100%; 
+    height: auto; 
+    max-height: 60px; 
 }
 
   @media (max-width: 600px) {
@@ -177,14 +180,14 @@ footer {
         }
 		
  .modal {
-    display: none; /* Hide the modal initially */
-    position: fixed; /* Fix modal position on screen */
-    z-index: 1000; /* Make sure it's above other elements */
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5); 
 }
 
 .modal-content {
@@ -228,15 +231,15 @@ footer {
 /* Container for centering */
   .logo-container {
       display: flex;
-      justify-content: center; /* Center horizontally */
-      align-items: center;    /* Center vertically */
-      height: 10vh;          /* Full viewport height for vertical centering */
+      justify-content: center; 
+      align-items: center;    
+      height: 10vh;         
   }
 
   /* Logo styling */
   .logo {
-      height: 100px; /* Adjust to your desired size */
-      width: auto;   /* Maintain aspect ratio */
+      height: 100px; 
+      width: auto;   
   }
   /* Set background image for the header */
 header {
@@ -248,27 +251,63 @@ header {
 
 /* Style for the welcome message */
 .welcome-message {
-    font-family: 'Arial', sans-serif;  /* Change the font to your desired one */
-    color: #080808;  /* Change the text color */
+    font-family: 'Arial', sans-serif;  
+    color: #080808;  
     font-size: 18px;
 }
 
 /* Style for the logout link */
 .logout-link {
-    font-family: 'Arial', sans-serif;  /* Change the font to your desired one */
-    color:#080808;  /* Change the link color */
+    font-family: 'Arial', sans-serif;  
+    color:black;  
     text-decoration: none;
     margin-left: 20px;
     font-size: 18px;
 }
 
 .logout-icon {
-    width: 20px;  /* Adjust icon size */
+    width: 20px;  
     height: 20px;
     margin-right: 5px;
 	
 }
 
 .logout-link:hover {
-    color: #f1c40f;  /* Change hover color */
+    color: white;  
+}
+
+#search-bar-container {
+    text-align: center;
+    margin: 20px 0; 
+}
+
+#search-form {
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+}
+
+#search-input {
+    width: 95%;
+    padding: 8px;
+    margin-right: 5px;
+}
+
+#search-form button {
+    padding: 8px 12px;
+    background-color: #f0ad4e; 
+    color: #4D4D4D;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#search-form button:hover {
+    background-color:  #ec971f; 
+}
+
+.unavailable {
+    color: gray;
+    opacity: 0.3;
+    pointer-events: none;   
 }
