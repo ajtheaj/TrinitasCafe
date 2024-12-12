@@ -57,100 +57,94 @@
 
 
     <script>
-	
         // URLs for the API endpoints for the two sheets
         const MENU_API_URL = 'https://sheetdb.io/api/v1/rt2kingf50buw';  
         const ORDERS_API_URL = 'https://sheetdb.io/api/v1/7m5t2uk3a8y0m'; 
         const LOGIN_API_URL = 'https://sheetdb.io/api/v1/a3v9fypr110rc'; 
 
-    function searchMenu(event) {
-    event.preventDefault(); // Prevent the form from reloading the page
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const menuItems = document.querySelectorAll('.menu-item');
+        function searchMenu(event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const menuItems = document.querySelectorAll('.menu-item');
 
-    menuItems.forEach(item => {
-        const itemName = item.querySelector('h3').textContent.toLowerCase();
-        if (itemName.includes(searchTerm)) {
-            item.style.display = 'block'; 
-        } else {
-            item.style.display = 'none'; 
-        }
-    });
-}
-
-
-// Function to fetch and display the Student ID after login
-    function fetchAndDisplayStudentId() {
-    fetch(LOGIN_API_URL)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-               // Assuming the last entry represents the logged-in student
-                const recentEntry = data[data.length - 1];
-                const studentId = recentEntry['Student ID']; 
-
-                // Check if the studentId exists and update the navbar
-                if (studentId) {
-                    document.getElementById('student-id-display').innerText = `Welcome, ${studentId}`;
+            menuItems.forEach(item => {
+                const itemName = item.querySelector('h3').textContent.toLowerCase();
+                if (itemName.includes(searchTerm)) {
+                    item.style.display = 'block'; 
                 } else {
-                    console.error('Student ID not found in response.');
-                }
-            } else {
-                console.error('No student data found.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching student data:', error);
-        });
-}
-
-      // Call this function after a successful login
-      fetchAndDisplayStudentId();
-
-        // Fetch the menu items from the "menu" sheet via SheetDB
-        fetch(MENU_API_URL)
-    .then(response => response.json())
-    .then(data => {
-        const menuContainer = document.getElementById('menu-container');
-        const orderNameSelect = document.getElementById('order-name'); 
-        menuContainer.innerHTML = '';  
-        orderNameSelect.innerHTML = '<option value="" disabled selected>Select your order</option>'; 
-
-        if (data.length === 0) {
-            menuContainer.innerHTML = '<p>Sorry, we\'re not available today.</p>';  
-        } else {
-            data.forEach(record => {
-               // Create the menu item card
-                const item = document.createElement('div');
-                item.className = 'menu-item';
-
-                // Apply a "grayed-out" class if the item is unavailable
-                if (record.Availability.toLowerCase() !== 'available') {
-                    item.classList.add('unavailable');
-                }
-
-                item.innerHTML = `
-                    <h3>${record.Item_Name}</h3>
-                    <p>Price: ₱${record.Price}</p>
-                    <p>Availability: ${record.Availability}</p>
-                    <img src="${record.Image_URL}" alt="${record.Item_Name}" style="width: 100px; height: auto;" />
-                `;
-                menuContainer.appendChild(item);
-
-                // Add the menu item as an option in the dropdown only if available
-                if (record.Availability.toLowerCase() === 'available') {
-                    const option = document.createElement('option');
-                    option.value = record.Item_Name;
-                    option.text = record.Item_Name;
-                    orderNameSelect.appendChild(option);
+                    item.style.display = 'none'; 
                 }
             });
         }
-    })
-    .catch(error => {
-        console.error('Error fetching menu data:', error);
-        document.getElementById('menu-container').innerHTML = '<p>Error loading menu.</p>';
-    });
+        
+        // Function to fetch and display the Student ID after login
+        function fetchAndDisplayStudentId() {
+            fetch('/CafeTrinitas/CheckSessionServlet')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isLoggedIn) {
+                        // Update navigation bar with logged-in user's ID
+                        document.getElementById('student-id-display').innerText = `Welcome, ${data.studentId}`;
+                    } else {
+                        // Redirect to login page if no session exists
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session:', error);
+                    // Optionally handle error state, like redirecting to login
+                });
+        }
+
+        // Call this function once the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayStudentId();
+        });
+
+        // Fetch the menu items from the "menu" sheet via SheetDB
+        fetch(MENU_API_URL)
+        .then(response => response.json())
+        .then(data => {
+            const menuContainer = document.getElementById('menu-container');
+            const orderNameSelect = document.getElementById('order-name'); 
+            menuContainer.innerHTML = '';  
+            orderNameSelect.innerHTML = '<option value="" disabled selected>Select your order</option>'; 
+
+            if (data.length === 0) {
+                menuContainer.innerHTML = '<p>Sorry, we\'re not available today.</p>';  
+            } else {
+                data.forEach(record => {
+                   // Create the menu item card
+                    const item = document.createElement('div');
+                    item.className = 'menu-item';
+
+                    // Apply a "grayed-out" class if the item is unavailable
+                    if (record.Availability.toLowerCase() !== 'available') {
+                        item.classList.add('unavailable');
+                    }
+
+                    item.innerHTML = `
+                        <h3>${record.Item_Name}</h3>
+                        <p>Price: ₱${record.Price}</p>
+                        <p>Availability: ${record.Availability}</p>
+                        <img src="${record.Image_URL}" alt="${record.Item_Name}" style="width: 100px; height: auto;" />
+                    `;
+                    menuContainer.appendChild(item);
+
+                    // Add the menu item as an option in the dropdown only if available
+                    if (record.Availability.toLowerCase() === 'available') {
+                        const option = document.createElement('option');
+                        option.value = record.Item_Name;
+                        option.text = record.Item_Name;
+                        orderNameSelect.appendChild(option);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching menu data:', error);
+            document.getElementById('menu-container').innerHTML = '<p>Error loading menu.</p>';
+        });
     </script>
 
     <h2 style="font-size:2em;">Place Your Order</h2>
@@ -392,11 +386,11 @@ document.getElementById('place-order-again').addEventListener('click', function(
     document.getElementById('show-payment-methods').style.display = 'block';
 });
 
-
     </script>
-	<footer>
-    <img src="imgs/footer.png" alt="Footer Image" id="footer-image">
-</footer>
+    
+    <footer>
+        <img src="imgs/footer.png" alt="Footer Image" id="footer-image">
+    </footer>
 
 </body>
 </html>
