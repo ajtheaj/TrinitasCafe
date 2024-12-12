@@ -11,17 +11,15 @@
     <div class="form-container" id="sign-up-form">
         <h2>Sign Up</h2>
         <form id="sign-up-form-inner" action="SignupServlet" method="POST">
-            <label for="student-id">Student ID</label>
+            <label for="student-id">Student ID<b style="color:red;">*</b></label>
             <input type="text" id="student-id" placeholder="Enter Student ID" required max="10">
 
-            <label for="name">Name</label>
+            <label for="name">Name<b style="color:red;">*</b></label>
             <input type="text" id="name" placeholder="Enter Name" required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter Password" required>
-
-            <label for="registration-date">Registration Date</label>
-            <input type="date" id="registration-date" required>
+            <label for="password">Password<b style="color:red;">*</b></label>
+            <input type="password" id="password" placeholder="Enter Password" required><br>
+			<p style="text-align: left; color:gray; font-size:12px; color: red;">*Field Required</p>
 
             <button type="button" id="sign-up-btn">Sign Up</button>
         </form>
@@ -42,7 +40,6 @@
                 const studentId = document.getElementById('student-id').value;
                 const name = document.getElementById('name').value;
                 const password = document.getElementById('password').value;
-                const registrationDate = document.getElementById('registration-date').value;
                 
                 // Validate Student ID (10 digits) and required fields
                 const studentIdPattern = /^[0-9]{10}$/;
@@ -63,7 +60,6 @@
                             "Student ID": studentId,
                             "Name": name,
                             "Password": password, // Remember to hash this in real applications
-                            "Registration Date": registrationDate,
                             
                         }
                     ]
