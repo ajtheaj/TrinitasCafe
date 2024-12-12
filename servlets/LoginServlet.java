@@ -1,18 +1,11 @@
-
 package TrinitasWebsite;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import javax.servlet.http.*;
+import java.io.*;
+import java.net.*;
+import org.json.*;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
@@ -21,58 +14,78 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         String studentId = request.getParameter("studentId");
         String password = request.getParameter("password");
-        
-        if (studentId == null || password == null) {
-            response.sendRedirect("login.html?error=missing_credentials");
+        JSONObject jsonResponse = new JSONObject();
+
+        // Validate input
+        if (studentId == null || password == null || studentId.isEmpty() || password.isEmpty()) {
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "missing_credentials");
+            response.getWriter().write(jsonResponse.toString());
             return;
         }
-        
+
         if (!studentId.matches("\\d{10}")) {
-            // Redirect back to login page with an error message
-            response.sendRedirect("login.html?error=invalid_id");
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "invalid_id");
+            response.getWriter().write(jsonResponse.toString());
             return;
         }
-        
+
+        // Construct API URL
         URL url = new URL(SHEETDB_API_URL + studentId);
-		HttpSession session = request.getSession(true); // Create a new session if one doesn't exist
-        session.setAttribute("studentId", studentId);
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
-        int responseCode = conn.getResponseCode();
-        if (responseCode == 200) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            int responseCode = conn.getResponseCode();
 
-            // Parse JSON response
-            JSONArray jsonArray = new JSONArray(content.toString());
-            if (jsonArray.length() > 0) {
-                JSONObject user = jsonArray.getJSONObject(0);
-                String storedPassword = user.getString("password");
+            if (responseCode == 200) {
+                StringBuilder content = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
 
-                // Compare stored password with the one entered
-                if (password.equals(storedPassword)) {
-                    // Successful login
-                    response.sendRedirect("menu.html");
+                JSONArray jsonArray = new JSONArray(content.toString());
+                if (jsonArray.length() > 0) {
+                    JSONObject user = jsonArray.getJSONObject(0);
+                    String storedPassword = user.optString("Password", "");
+
+                    if (password.equals(storedPassword)) {
+                        // Successful login
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("studentId", studentId);
+                        session.setMaxInactiveInterval(15 * 60);
+
+                        jsonResponse.put("status", "success");
+                        jsonResponse.put("redirect", "menu.html");
+                    } else {
+                        jsonResponse.put("status", "error");
+                        jsonResponse.put("message", "invalid_credentials");
+                    }
                 } else {
-                    // Invalid password
-                    response.sendRedirect("login.html?error=invalid_credentials");
+                    jsonResponse.put("status", "error");
+                    jsonResponse.put("message", "invalid_id");
                 }
             } else {
-                // Student ID not found
-                response.sendRedirect("signup.html?error=invalid_id");
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "server_error");
             }
-        } else {
-            // Error handling if SheetDB API call fails
-            response.sendRedirect("login.html?error=server_error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "server_error");
+        } finally {
+            conn.disconnect();
         }
+
+        response.getWriter().write(jsonResponse.toString());
     }
 }
