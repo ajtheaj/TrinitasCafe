@@ -28,37 +28,49 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('login-btn').addEventListener('click', function () {
-                const studentId = document.getElementById('login-student-id').value;
-                const password = document.getElementById('login-password').value;
+        document.getElementById('login-btn').addEventListener('click', function () {
+            const studentId = document.getElementById('login-student-id').value;
+            const password = document.getElementById('login-password').value;
 
-                fetch(`https://sheetdb.io/api/v1/a3v9fypr110rc/search?Student%20ID=${studentId}&Password=${password}`)
+            // Validate input on the client-side
+            if (!studentId || !password) {
+                alert('Enter both Student ID and Password.');
+                return;
+            }
 
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            alert('Login successful! Redirecting to order form...');
-                            window.location.href = 'menu.html'; // Replace with your order form URL
-                        } else {
-                            alert('Invalid Student ID or Password.');
-                        }
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-                const urlParams = new URLSearchParams(window.location.search);
-                
-                const error = urlParams.get('error');
-
-                if (error === 'invalid_id') {
-                    alert('Invalid Student ID');
-                } else if (error === 'invalid_credentials') {
-                    alert('Invalid Student ID or Password.');
+            fetch('/CafeTrinitas/LoginServlet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    studentId: studentId,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Login successful! Redirecting to order form...');
+                    window.location.href = data.redirect; // Redirect to the URL provided by the server
+                } else if (data.status === 'error') {
+                    if (data.message === 'missing_credentials') {
+                        alert('Enter both Student ID and Password.');
+                    } else if (data.message === 'invalid_id') {
+                        alert('Invalid Student ID.');
+                    } else if (data.message === 'invalid_credentials') {
+                        alert('Invalid Student ID or Password.');
+                    } else if (data.message === 'server_error') {
+                        alert('A server error occurred. Please try again later.');
+                    }
                 }
-                else if (error === 'missing_credentials') {
-                    alert('Enter required input');
-                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                alert('An unexpected error occurred. Please try again.');
             });
         });
+    });
     </script>
 </body>
 </html>
