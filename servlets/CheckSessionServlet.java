@@ -12,10 +12,15 @@ public class CheckSessionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("studentId") == null) {
+            response.sendRedirect("login.html?error=session_expired");
+        }
+        
         JSONObject jsonResponse = new JSONObject();
 
         try (PrintWriter out = response.getWriter()) {
